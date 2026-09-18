@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NARMEA Production Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EFEBDD;
+  --surface:#F8F5EC;
+  --surface-2:#E7E2D1;
+  --ink:#0D1A12;
+  --ink-2:#1E3323;
+  --muted:#5D7A5F;
+  --faint:#9AA894;
+  --rule:#D3CCB7;
+  --accent:#9A7F3E;
+  --accent-soft:#B39B62;
+  --warn:#8C4A2F;
+  --warn-bg:#F3E6DE;
+  --ok:#3E6144;
+  --ok-bg:#E2E9DC;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"Inter Tight",system-ui,-apple-system,Segoe UI,sans-serif;
+  --display:"Marcellus",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A120D;
+    --surface:#14211A;
+    --surface-2:#1B2A22;
+    --ink:#E8E4D8;
+    --ink-2:#C3D2C2;
+    --muted:#93A891;
+    --faint:#6D7F6E;
+    --rule:#2A3A30;
+    --accent:#C8B078;
+    --accent-soft:#B39B62;
+    --warn:#D69070;
+    --warn-bg:#2B1C15;
+    --ok:#8FBE95;
+    --ok-bg:#16251A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A120D;
+  --surface:#14211A;
+  --surface-2:#1B2A22;
+  --ink:#E8E4D8;
+  --ink-2:#C3D2C2;
+  --muted:#93A891;
+  --faint:#6D7F6E;
+  --rule:#2A3A30;
+  --accent:#C8B078;
+  --accent-soft:#B39B62;
+  --warn:#D69070;
+  --warn-bg:#2B1C15;
+  --ok:#8FBE95;
+  --ok-bg:#16251A;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:780px;margin:0 auto;padding-inline:20px;padding-block:0 96px}
+
+/* ---------- masthead ---------- */
+.mast{padding-block:56px 30px;border-bottom:1px solid var(--rule)}
+.brandline{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.wordmark{
+  font-family:var(--display);
+  font-size:clamp(30px,7vw,42px);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  line-height:1;
+  color:var(--ink);
+}
+.wordmark em{font-style:normal;color:var(--accent)}
+.mast h1{
+  font-family:var(--body);
+  font-weight:500;
+  font-size:clamp(17px,3.4vw,20px);
+  letter-spacing:.02em;
+  margin:14px 0 0;
+  color:var(--muted);
+  text-wrap:balance;
+}
+.meta{
+  display:flex;flex-wrap:wrap;gap:8px 22px;
+  margin-top:20px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--faint);
+}
+.meta b{color:var(--muted);font-weight:500}
+
+/* ---------- batch control ---------- */
+.control{
+  position:sticky;top:0;z-index:20;
+  background:var(--bg);
+  border-bottom:1px solid var(--rule);
+  margin-inline:-20px;padding-inline:20px;
+  padding-block:11px;
+}
+.control-in{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.control-lbl{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--faint);
+}
+.stepper{display:flex;align-items:center;border:1px solid var(--rule);border-radius:2px;background:var(--surface);overflow:hidden}
+.stepper button{
+  appearance:none;border:0;background:transparent;color:var(--muted);
+  font-family:var(--mono);font-size:16px;line-height:1;
+  width:34px;height:34px;cursor:pointer;
+}
+.stepper button:hover{background:var(--surface-2);color:var(--ink)}
+.stepper input{
+  appearance:none;border:0;background:transparent;color:var(--ink);
+  font-family:var(--mono);font-weight:600;font-size:15px;
+  width:56px;height:34px;text-align:center;
+  border-inline:1px solid var(--rule);
+}
+.stepper input:focus-visible,.chip:focus-visible,.stepper button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{
+  appearance:none;cursor:pointer;
+  border:1px solid var(--rule);background:transparent;color:var(--muted);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;
+  padding:6px 10px;border-radius:2px;
+}
+.chip:hover{border-color:var(--accent-soft);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.yield{
+  font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  margin-left:auto;letter-spacing:.03em;
+}
+
+/* ---------- sections ---------- */
+section{padding-block:44px 0;scroll-margin-top:72px}
+.shead{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.snum{
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;
+  color:var(--accent);padding-top:4px;
+}
+h2{
+  font-family:var(--display);
+  font-size:clamp(21px,4.4vw,26px);
+  font-weight:400;line-height:1.2;margin:0;
+  letter-spacing:.005em;text-wrap:balance;
+}
+h3{
+  font-family:var(--body);font-weight:600;font-size:15px;
+  letter-spacing:.05em;text-transform:uppercase;
+  margin:34px 0 12px;color:var(--ink-2);
+}
+.lede{color:var(--muted);margin:0 0 4px;max-width:62ch}
+p{max-width:66ch}
+a{color:var(--accent)}
+
+/* ---------- rules list ---------- */
+.rules{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:1px;background:var(--rule);border-block:1px solid var(--rule)}
+.rules li{background:var(--bg);padding:16px 0 16px 0;display:grid;grid-template-columns:28px 1fr;gap:14px;align-items:start}
+.rules .rn{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);padding-top:3px}
+.rules strong{display:block;font-weight:600;font-size:15.5px;margin-bottom:2px}
+.rules span{color:var(--muted);font-size:14.5px;display:block;max-width:60ch}
+
+/* ---------- formula table ---------- */
+.fscroll{overflow-x:auto;margin-top:14px;border:1px solid var(--rule);background:var(--surface);border-radius:2px}
+table.f{width:100%;border-collapse:collapse;min-width:440px}
+table.f th,table.f td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--rule)}
+table.f thead th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--faint);font-weight:500;background:var(--surface-2);
+}
+table.f tbody tr:last-child td{border-bottom:0}
+table.f tr.total td{background:var(--surface-2);font-weight:600}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.qty{font-size:15px;font-weight:600}
+.pct{color:var(--muted);font-size:12.5px}
+.alt{color:var(--faint);font-size:12.5px;font-family:var(--mono)}
+.bar{display:block;height:3px;background:var(--surface-2);border-radius:2px;margin-top:6px;max-width:130px}
+.bar i{display:block;height:100%;background:var(--accent-soft);border-radius:2px}
+td.item{min-width:150px}
+td.item em{font-style:normal;display:block;color:var(--faint);font-size:12.5px;margin-top:1px}
+
+/* ---------- steps ---------- */
+ol.steps{list-style:none;counter-reset:s;margin:18px 0 0;padding:0}
+ol.steps>li{
+  counter-increment:s;
+  position:relative;
+  padding:0 0 22px 46px;
+  border-left:1px solid var(--rule);
+  margin-left:13px;
+}
+ol.steps>li:last-child{border-left-color:transparent;padding-bottom:4px}
+ol.steps>li::before{
+  content:counter(s,decimal-leading-zero);
+  position:absolute;left:-13px;top:0;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--rule);
+  font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+}
+ol.steps b{display:block;font-weight:600;font-size:15.5px;margin-bottom:3px}
+ol.steps p{margin:0;color:var(--muted);font-size:14.5px;max-width:60ch}
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--accent);border:1px solid var(--accent-soft);
+  padding:1px 6px;border-radius:2px;margin-left:8px;vertical-align:2px;
+}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:3px solid var(--accent);
+  background:var(--surface);
+  padding:14px 16px;margin:20px 0 0;border-radius:0 2px 2px 0;
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.note.ok{border-left-color:var(--ok);background:var(--ok-bg)}
+.note h4{
+  margin:0 0 4px;font-size:11px;font-family:var(--mono);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--warn);font-weight:600;
+}
+.note.ok h4{color:var(--ok)}
+.note:not(.warn):not(.ok) h4{color:var(--accent)}
+.note p{margin:0;font-size:14.5px;color:var(--ink);max-width:60ch}
+.note p+p{margin-top:8px}
+
+/* ---------- switch ---------- */
+.switch{display:flex;gap:0;border:1px solid var(--rule);border-radius:2px;overflow:hidden;margin-top:14px;max-width:520px}
+.switch button{
+  flex:1;appearance:none;border:0;cursor:pointer;
+  background:var(--surface);color:var(--muted);
+  font-family:var(--body);font-size:13.5px;font-weight:500;
+  padding:11px 12px;text-align:left;line-height:1.35;
+}
+.switch button+button{border-left:1px solid var(--rule)}
+.switch button small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-top:2px}
+.switch button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.switch button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+
+/* ---------- generic data table ---------- */
+.dscroll{overflow-x:auto;margin-top:14px}
+table.d{width:100%;border-collapse:collapse;min-width:460px;font-size:14.5px}
+table.d th,table.d td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+table.d thead th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--faint);font-weight:500;border-bottom:1px solid var(--ink-2);
+}
+table.d td:first-child{color:var(--ink);font-weight:500}
+table.d td{color:var(--muted)}
+
+/* ---------- log sheet ---------- */
+table.log{width:100%;border-collapse:collapse;min-width:620px;font-size:13px}
+table.log th,table.log td{border:1px solid var(--rule);padding:9px 8px;text-align:left}
+table.log thead th{
+  font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--faint);font-weight:500;background:var(--surface-2);
+}
+table.log td{height:38px}
+
+/* ---------- never list ---------- */
+.never{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:10px}
+.never li{
+  display:grid;grid-template-columns:18px 1fr;gap:12px;
+  font-size:14.5px;color:var(--ink);max-width:62ch;
+}
+.never li::before{content:"×";font-family:var(--mono);color:var(--warn);font-size:16px;line-height:1.4}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+
+@media (max-width:520px){
+  .yield{margin-left:0;width:100%}
+  ol.steps>li{padding-left:38px}
+}
+@media print{
+  :root{--bg:#fff;--surface:#fff;--surface-2:#f2f2f2;--ink:#000;--ink-2:#222;--muted:#333;--faint:#666;--rule:#bbb;--accent:#6b5a2a}
+  .control{display:none}
+  section{break-inside:auto;padding-block:26px 0}
+  .shead,h3{break-after:avoid}
+  ol.steps>li,.rules li,.note{break-inside:avoid}
+  .fscroll,.dscroll{overflow:visible}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="brandline">
+      <div class="wordmark">narm<em>e</em>a</div>
+    </div>
+    <h1>Production Manual for Scalp Mist and Root Oil</h1>
+    <div class="meta">
+      <span><b>Fill volume</b> 100 ml</span>
+      <span><b>Bottle</b> 120 ml PET</span>
+      <span><b>Target shelf life</b> 12 months</span>
+      <span><b>Version</b> 2.0</span>
+    </div>
+  </header>
+
+  <div class="control">
+    <div class="control-in">
+      <span class="control-lbl">Batch size</span>
+      <div class="stepper">
+        <button type="button" id="dec" aria-label="Fewer bottles">−</button>
+        <input id="qtyInput" type="number" min="1" max="500" step="1" value="10" aria-label="Number of bottles">
+        <button type="button" id="inc" aria-label="More bottles">+</button>
+      </div>
+      <div class="chips" id="chips">
+        <button type="button" class="chip" data-n="4">4</button>
+        <button type="button" class="chip" data-n="10">10</button>
+        <button type="button" class="chip" data-n="20">20</button>
+        <button type="button" class="chip" data-n="50">50</button>
+      </div>
+      <span class="yield" id="yieldTxt">1000 ml finished</span>
+    </div>
+  </div>
+
+  <!-- ============ 01 ============ -->
+  <section>
+    <div class="shead"><span class="snum">01</span><h2>The five things that decide whether a batch survives</h2></div>
+    <p class="lede">A batch that smells within a few weeks almost never failed because of the recipe. It failed at one of these five points. Read this page before every batch.</p>
+
+    <ol class="rules">
+      <li><span class="rn">01</span><div>
+        <strong>Distilled water only</strong>
+        <span>Tap water, filtered water and bazaar rose water all carry live bacteria. Rose water is used here for scent at 10%, never as the base. The base must be distilled water bought sealed.</span>
+      </div></li>
+      <li><span class="rn">02</span><div>
+        <strong>Everything sanitised before it touches product</strong>
+        <span>Bottles, sprayers, funnel, jar, spoons, thermometer. Wash, rinse with 70% isopropyl alcohol, stand upside down to dry. Wash hands. Preservative stops new growth, it cannot clean up contamination that was already in the bottle.</span>
+      </div></li>
+      <li><span class="rn">03</span><div>
+        <strong>pH between 4.5 and 5.0</strong>
+        <span>Phenoxyethanol stops working above pH 6. A herbal decoction usually sits at 5.5 to 6.5, so it has to be brought down with citric acid. Skipping this one step wastes the preservative entirely, and it is the most common reason a preserved batch still spoils.</span>
+      </div></li>
+      <li><span class="rn">04</span><div>
+        <strong>Preservative weighed, not estimated</strong>
+        <span>0.80% of the finished weight. Use a 0.01 g scale. Below 0.5% it does not protect; above 1.0% it is over the legal limit and can irritate the scalp.</span>
+      </div></li>
+      <li><span class="rn">05</span><div>
+        <strong>Preservative added below 40°C</strong>
+        <span>Add it to cooled liquid, never to a hot pot, and stir for a full two to three minutes. Phenoxyethanol dissolves slowly. If it is not fully dissolved it is not protecting the batch.</span>
+      </div></li>
+    </ol>
+
+    <div class="note warn">
+      <h4>If a previous batch went off at room temperature</h4>
+      <p>It was rule 01, 02 or 03. Fridge storage was hiding the problem, not solving it. A correctly made batch does not need a fridge, and a product that needs one cannot be sold.</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section>
+    <div class="shead"><span class="snum">02</span><h2>Equipment and materials</h2></div>
+
+    <h3>Buy once</h3>
+    <div class="dscroll">
+      <table class="d">
+        <thead><tr><th>Item</th><th>Spec</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Digital scale</td><td>0.01 g resolution</td><td>Preservative and citric acid are weighed in fractions of a gram</td></tr>
+          <tr><td>pH strips or meter</td><td>Range 3–7 / digital</td><td>A meter is worth the extra cost, strips are hard to read on a dark liquid</td></tr>
+          <tr><td>Cooking thermometer</td><td>0–150°C</td><td>Oil infusion must stay under 70°C</td></tr>
+          <tr><td>Pot</td><td>Stainless steel or glass</td><td>Aluminium and iron react with the herbs and darken the colour</td></tr>
+          <tr><td>Muslin cloth</td><td>Fine weave</td><td>Double straining, no particles in the bottle</td></tr>
+          <tr><td>Funnel, jug, spoons</td><td>Steel or glass</td><td>Dedicated to production only</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Buy every batch</h3>
+    <div class="dscroll">
+      <table class="d">
+        <thead><tr><th>Material</th><th>Used in</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Distilled water</td><td>Mist</td><td>Sealed bottle, medical or lab grade</td></tr>
+          <tr><td>Rose water</td><td>Mist</td><td>10% of finished weight, for scent</td></tr>
+          <tr><td>Phenoxyethanol</td><td>Mist</td><td>0.80% of finished weight</td></tr>
+          <tr><td>Citric acid</td><td>Mist</td><td>50 g lasts many batches</td></tr>
+          <tr><td>Isopropyl alcohol 70%</td><td>Both</td><td>Sanitising only, never goes in the product</td></tr>
+          <tr><td>Coconut oil, mustard oil</td><td>Oil</td><td>Fresh stock, not an old open tin</td></tr>
+          <tr><td>Rosemary oil</td><td>Oil</td><td>See section 04 for which type</td></tr>
+          <tr><td>Vitamin E</td><td>Oil</td><td>Antioxidant, keeps the oil from turning rancid</td></tr>
+          <tr><td>Dried rosemary, cloves, fenugreek</td><td>Both</td><td>Must be bone dry before use</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section>
+    <div class="shead"><span class="snum">03</span><h2>Scalp Mist</h2></div>
+    <p class="lede">Water based, leave-in, daily use. 100 ml per bottle. Quantities below follow the batch size set at the top of the page.</p>
+
+    <h3>Herbs for the decoction</h3>
+    <div class="fscroll">
+      <table class="f">
+        <thead><tr><th>Herb</th><th>Weight</th><th>Approx.</th></tr></thead>
+        <tbody id="mistHerbs"></tbody>
+      </table>
+    </div>
+
+    <h3>Finished formula</h3>
+    <div class="fscroll">
+      <table class="f">
+        <thead><tr><th>Phase</th><th>Quantity</th><th>Share of formula</th></tr></thead>
+        <tbody id="mistFormula"></tbody>
+      </table>
+    </div>
+
+    <h3>Method</h3>
+    <ol class="steps">
+      <li><b>Sanitise everything</b><p>Bottles, sprayers, funnel, jar, spoons. Wash, rinse with 70% isopropyl, stand upside down to dry completely. Wash your hands.</p></li>
+      <li><b>Simmer the herbs</b><span class="tag" id="tagWater">160 ml water</span><p>Put the distilled water and all three herbs in a steel or glass pot. Lid on. Simmer on low for 20 to 25 minutes. The lid stays on so the water loss is predictable.</p></li>
+      <li><b>Steep off the heat</b><p>Turn the heat off, leave the lid on, and let it sit for 30 minutes. This pulls out more than a longer boil does, without cooking the extract.</p></li>
+      <li><b>Strain twice</b><p>Through muslin cloth, twice. Not one particle should reach the bottle. Anything solid left behind is a spoilage site.</p></li>
+      <li><b>Weigh and correct the volume</b><span class="tag" id="tagDecoction">to 892 g</span><p>Weigh the strained liquid and top it up with distilled water to the exact target. This is what makes every batch identical regardless of how hard it boiled.</p></li>
+      <li><b>Cool below 40°C</b><p>Wait for it. Do not add anything to a warm pot.</p></li>
+      <li><b>Add rose water, then preservative</b><p>Stir the rose water in first. Then add the phenoxyethanol and stir continuously for two to three minutes until it is completely dissolved.</p></li>
+      <li><b>Set the pH to 4.5–5.0</b><span class="tag">critical</span><p>Measure. Add citric acid a pinch at a time, stirring and re-measuring after each addition. Stop as soon as you are inside the range. Write the final reading in the batch log.</p></li>
+      <li><b>Fill and label</b><span class="tag">100 ml each</span><p>Fill through a funnel, 100 ml per bottle. Mark every bottle with the batch number and date before it leaves the table.</p></li>
+    </ol>
+
+    <div class="note">
+      <h4>Why the pH step matters more than the preservative</h4>
+      <p>Phenoxyethanol is strong against bacteria but weak against mould and yeast, and mould is what shows up at week three to six. Holding the product at pH 5.0 or below suppresses mould on its own, which closes that gap. Citric acid costs almost nothing and needs no new supplier. It also matches the scalp's own pH of 4.5 to 5.5, so the product sits better on skin.</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section>
+    <div class="shead"><span class="snum">04</span><h2>Root Oil</h2></div>
+    <p class="lede">Oil based, applied two hours before washing, three times a week. 100 ml per bottle. Pick the version that matches the rosemary oil you actually have.</p>
+
+    <div class="switch" id="oilSwitch">
+      <button type="button" data-v="A" aria-pressed="true">Infused rosemary oil<small>Large bottle · mild scent · inexpensive</small></button>
+      <button type="button" data-v="B" aria-pressed="false">Rosemary essential oil<small>10 ml dropper · very strong scent</small></button>
+    </div>
+
+    <div class="note warn" id="oilWarn" hidden>
+      <h4>Essential oil must be capped at 1.5%</h4>
+      <p>Rosemary essential oil has a leave-on skin limit of roughly 2%. At 8% it causes irritation and contact sensitisation with repeated use, which is the one thing this brand cannot afford. The rest of the volume is made up with coconut oil.</p>
+    </div>
+
+    <h3>Herbs for the infusion</h3>
+    <div class="fscroll">
+      <table class="f">
+        <thead><tr><th>Herb</th><th>Weight</th><th>Approx.</th></tr></thead>
+        <tbody id="oilHerbs"></tbody>
+      </table>
+    </div>
+
+    <h3>Finished formula</h3>
+    <div class="fscroll">
+      <table class="f">
+        <thead><tr><th>Phase</th><th>Quantity</th><th>Share of formula</th></tr></thead>
+        <tbody id="oilFormula"></tbody>
+      </table>
+    </div>
+
+    <h3>Method</h3>
+    <ol class="steps">
+      <li><b>Dry the herbs completely</b><p>Two to three hours in direct sun, or 20 minutes in the oven at 60°C. Any moisture carried into oil turns into mould later. This single step does more for the oil's shelf life than anything else.</p></li>
+      <li><b>Infuse on very low heat</b><span class="tag">2–3 hours · max 70°C</span><p>Put the herbs into the coconut and mustard oil. Keep it under 70°C for two to three hours. Without a thermometer, keep the flame low enough that not a single bubble rises.</p></li>
+      <li><b>Cool, then strain twice</b><p>Let the oil come back to room temperature before straining through muslin, twice. No particles, no herb pieces left in the bottle for show.</p></li>
+      <li><b>Add rosemary oil and vitamin E last</b><span class="tag">off the heat</span><p>Both are destroyed by heat. Adding them to warm oil is why a batch can still turn in three to four months.</p></li>
+      <li><b>Fill and label</b><span class="tag">100 ml each</span><p>Dry bottles only. Batch number and date on every one.</p></li>
+    </ol>
+
+    <div class="note">
+      <h4>On the smell</h4>
+      <p>Mustard oil carries the strongest scent in this formula. To soften it, drop mustard and raise coconut by the same amount, or replace part of the mustard with sesame oil, which is as good for hair and much milder.</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section>
+    <div class="shead"><span class="snum">05</span><h2>Proving the shelf life</h2></div>
+    <p class="lede">Twenty days is a good sign but not proof. Mould appears between week three and week six, which is exactly the window a short test misses. Set three bottles aside from the next batch and leave them alone.</p>
+
+    <div class="dscroll">
+      <table class="d">
+        <thead><tr><th>Bottle</th><th>Kept where</th><th>For</th><th>Checked for</th></tr></thead>
+        <tbody>
+          <tr><td>A · Ambient</td><td>Room temperature, dark cupboard</td><td>12 weeks</td><td>Smell, colour, cloudiness, floating particles</td></tr>
+          <tr><td>B · Accelerated</td><td>Warm spot around 40°C</td><td>8 weeks</td><td>Same. This is the shortcut that stands in for twelve months</td></tr>
+          <tr><td>C · In use</td><td>Used daily as a customer would</td><td>8 weeks</td><td>Same, plus a pH reading every week</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note ok">
+      <h4>The pass mark</h4>
+      <p>If bottle B is clean at eight weeks, a twelve month shelf life can be printed on the label. Start this test now, because the wait runs in parallel with building the store and the content.</p>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section>
+    <div class="shead"><span class="snum">06</span><h2>When something goes wrong</h2></div>
+    <div class="dscroll">
+      <table class="d">
+        <thead><tr><th>What you see</th><th>What it means</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Sour or off smell in 1–3 weeks</td><td>Bacteria. Almost always non-distilled water, or unsanitised bottles</td><td>Discard the batch. Rebuild using sealed distilled water and re-sanitise everything</td></tr>
+          <tr><td>Fuzzy spots or a film on top at 3–6 weeks</td><td>Mould. pH is too high, so the preservative is not covering fungi</td><td>Discard. Next batch, measure pH and bring it to 4.5–5.0</td></tr>
+          <tr><td>Cloudy or hazy liquid</td><td>Straining was incomplete, or the preservative did not fully dissolve</td><td>Strain twice through muslin, and stir the preservative a full 2–3 minutes</td></tr>
+          <tr><td>Colour slowly deepens</td><td>Normal oxidation of plant pigment</td><td>Not spoilage. The full-wrap label keeps it out of sight and blocks the light that speeds it up</td></tr>
+          <tr><td>Oil smells rancid at 3–4 months</td><td>Vitamin E was added while the oil was hot, or herbs were damp</td><td>Add vitamin E only after cooling, and dry the herbs fully first</td></tr>
+          <tr><td>Oil has cloudy specks at the bottom</td><td>Moisture from the herbs</td><td>Discard. Dry herbs properly before the next infusion</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section>
+    <div class="shead"><span class="snum">07</span><h2>Batch log</h2></div>
+    <p class="lede">Fill one row per batch and keep it. If a customer ever reports a problem, this is the only way to know which bottles are affected and which are fine. Batch numbers run as year, month, then batch of that month: 2609-01.</p>
+    <div class="dscroll">
+      <table class="log">
+        <thead>
+          <tr><th>Batch no.</th><th>Date</th><th>Product</th><th>Bottles</th><th>Final pH</th><th>Preservative (g)</th><th>Made by</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section>
+    <div class="shead"><span class="snum">08</span><h2>Never</h2></div>
+    <ul class="never">
+      <li>Never tell a customer to re-boil a product that has started to smell. Boiling kills the organisms but leaves their toxins behind, and the product is already degraded.</li>
+      <li>Never use tap, filtered or boiled tap water as the base of the mist.</li>
+      <li>Never treat vitamin E as a preservative. It is an antioxidant and has no effect on bacteria, mould or yeast.</li>
+      <li>Never add the preservative to a hot batch, and never estimate the amount by eye.</li>
+      <li>Never skip the pH reading because the batch "looks fine". The failure shows up weeks later, after the bottles have shipped.</li>
+      <li>Never leave herb pieces in the finished bottle for appearance. They carry moisture and spoil the product.</li>
+      <li>Never sell a bottle that was not logged, labelled with a batch number, and dated.</li>
+    </ul>
+  </section>
+
+  <footer>NARMEA · Internal production document · Not for distribution with product</footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // Everything is derived from one finished bottle of 100 ml.
+  var BOTTLE = 100;
+
+  var MIST = {
+    herbs: [
+      {name:"Dried rosemary", sub:"leaves, not fresh", per:2.13, tbsp:2.0},
+      {name:"Fenugreek seeds", sub:"whole", per:11.80, tbsp:11.0},
+      {name:"Cloves", sub:"whole", per:6.43, tbsp:6.0}
+    ],
+    water: 160.0,                      // distilled water to start the decoction
+    phases: [
+      {name:"Herbal decoction", sub:"strained, topped up with distilled water", per:89.20, unit:"g"},
+      {name:"Rose water", sub:"added after cooling", per:10.00, unit:"g"},
+      {name:"Phenoxyethanol", sub:"preservative, added below 40°C", per:0.80, unit:"g"},
+      {name:"Citric acid", sub:"added to pH, roughly this much", per:0.10, unit:"g", approx:true}
+    ]
+  };
+
+  var OIL = {
+    herbs: [
+      {name:"Dried rosemary", sub:"fully dried", per:2.0, tbsp:2.0},
+      {name:"Cloves", sub:"whole", per:6.0, tbsp:6.0},
+      {name:"Fenugreek seeds", sub:"whole", per:11.0, tbsp:11.0}
+    ],
+    A: {
+      loss: 0.87,
+      phases:[
+        {name:"Coconut oil", sub:"infusion base", per:46.0, unit:"ml", base:true},
+        {name:"Mustard oil", sub:"infusion base", per:46.0, unit:"ml", base:true},
+        {name:"Rosemary infused oil", sub:"added after cooling", per:7.0, unit:"ml"},
+        {name:"Vitamin E", sub:"added after cooling", per:1.0, unit:"ml"}
+      ]
+    },
+    B: {
+      loss: 0.87,
+      phases:[
+        {name:"Coconut oil", sub:"infusion base", per:49.0, unit:"ml", base:true},
+        {name:"Mustard oil", sub:"infusion base", per:48.5, unit:"ml", base:true},
+        {name:"Rosemary essential oil", sub:"added after cooling · max 1.5%", per:1.5, unit:"ml"},
+        {name:"Vitamin E", sub:"added after cooling", per:1.0, unit:"ml"}
+      ]
+    }
+  };
+
+  function fmt(v){
+    if(v >= 100) return v.toFixed(0);
+    if(v >= 10)  return v.toFixed(1);
+    return v.toFixed(2);
+  }
+  function el(tag, cls, html){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  function herbRows(tbody, herbs, n){
+    tbody.textContent = "";
+    herbs.forEach(function(h){
+      var g = h.per * n;
+      var tr = el("tr");
+      tr.appendChild(el("td","item","<strong>"+h.name+"</strong><em>"+h.sub+"</em>"));
+      tr.appendChild(el("td","num qty", fmt(g)+" g"));
+      tr.appendChild(el("td","alt", "≈ "+(g/h.tbsp).toFixed(1)+" tbsp"));
+      tbody.appendChild(tr);
+    });
+  }
+
+  function formulaRows(tbody, phases, n, unit, extraRow){
+    tbody.textContent = "";
+    var total = 0;
+    phases.forEach(function(p){ total += p.per; });
+
+    phases.forEach(function(p){
+      var v = p.per * n;
+      var pct = (p.per / total) * 100;
+      var tr = el("tr");
+      tr.appendChild(el("td","item","<strong>"+p.name+"</strong><em>"+p.sub+"</em>"));
+      tr.appendChild(el("td","num qty", (p.approx ? "~" : "") + fmt(v) + " " + p.unit));
+      var td = el("td");
+      td.appendChild(el("span","pct", pct.toFixed(2).replace(/\.?0+$/,"") + "%"));
+      var bar = el("span","bar");
+      bar.appendChild(el("i"));
+      bar.firstChild.style.width = Math.max(1.5, pct) + "%";
+      td.appendChild(bar);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    });
+
+    if(extraRow) tbody.appendChild(extraRow);
+
+    var t = el("tr","total");
+    t.appendChild(el("td","item","<strong>Finished yield</strong>"));
+    t.appendChild(el("td","num qty", fmt(BOTTLE*n) + " " + unit));
+    t.appendChild(el("td","alt", n + (n === 1 ? " bottle" : " bottles")));
+    tbody.appendChild(t);
+  }
+
+  var qtyInput   = document.getElementById("qtyInput");
+  var yieldTxt   = document.getElementById("yieldTxt");
+  var tagWater   = document.getElementById("tagWater");
+  var tagDec     = document.getElementById("tagDecoction");
+  var oilWarn    = document.getElementById("oilWarn");
+  var oilVersion = "A";
+
+  function render(){
+    var n = parseInt(qtyInput.value, 10);
+    if(isNaN(n) || n < 1) n = 1;
+    if(n > 500) n = 500;
+
+    yieldTxt.textContent = (BOTTLE*n).toLocaleString("en-US") + " ml finished";
+
+    // --- mist ---
+    herbRows(document.getElementById("mistHerbs"), MIST.herbs, n);
+    formulaRows(document.getElementById("mistFormula"), MIST.phases, n, "g");
+    tagWater.textContent = fmt(MIST.water*n) + " ml water";
+    tagDec.textContent   = "to " + fmt(MIST.phases[0].per*n) + " g";
+
+    // --- oil ---
+    var v = OIL[oilVersion];
+    herbRows(document.getElementById("oilHerbs"), OIL.herbs, n);
+
+    // oil absorbed by the herbs means the infusion has to start with more
+    var baseFinished = 0;
+    v.phases.forEach(function(p){ if(p.base) baseFinished += p.per; });
+    var startOil = (baseFinished * n) / v.loss;
+    var extra = el("tr");
+    extra.appendChild(el("td","item","<strong>Start the infusion with</strong><em>coconut + mustard, before the herbs absorb ~13%</em>"));
+    extra.appendChild(el("td","num qty", fmt(startOil) + " ml"));
+    extra.appendChild(el("td","alt", "yields " + fmt(baseFinished*n) + " ml strained"));
+
+    formulaRows(document.getElementById("oilFormula"), v.phases, n, "ml", extra);
+
+    oilWarn.hidden = (oilVersion !== "B");
+
+    Array.prototype.forEach.call(document.querySelectorAll("#chips .chip"), function(c){
+      c.setAttribute("aria-pressed", parseInt(c.dataset.n,10) === n ? "true" : "false");
+    });
+  }
+
+  document.getElementById("inc").addEventListener("click", function(){
+    qtyInput.value = Math.min(500, (parseInt(qtyInput.value,10)||1) + 1); render();
+  });
+  document.getElementById("dec").addEventListener("click", function(){
+    qtyInput.value = Math.max(1, (parseInt(qtyInput.value,10)||1) - 1); render();
+  });
+  qtyInput.addEventListener("input", render);
+
+  document.getElementById("chips").addEventListener("click", function(e){
+    var b = e.target.closest(".chip");
+    if(!b) return;
+    qtyInput.value = b.dataset.n;
+    render();
+  });
+
+  document.getElementById("oilSwitch").addEventListener("click", function(e){
+    var b = e.target.closest("button");
+    if(!b) return;
+    oilVersion = b.dataset.v;
+    Array.prototype.forEach.call(this.querySelectorAll("button"), function(x){
+      x.setAttribute("aria-pressed", x === b ? "true" : "false");
+    });
+    render();
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
